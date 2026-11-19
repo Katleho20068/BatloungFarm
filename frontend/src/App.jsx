@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
-const API = 'http://localhost:5000/api';
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const AUTH_STORAGE_KEY = 'batloung-farm-user';
 const PAGE_PATHS = {
   Dashboard: '/dashboard',
