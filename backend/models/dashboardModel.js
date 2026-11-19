@@ -1,14 +1,13 @@
-
 const db = require('../config/db');
 
 const getDashboardStats = async () => {
     const queries = await Promise.all([
-        db.query('SELECT COUNT(*) AS total FROM Fruits'),
-        db.query('SELECT COUNT(*) AS total FROM Suppliers'),
-        db.query('SELECT COUNT(*) AS total FROM Vendors'),
-        db.query('SELECT COUNT(*) AS total FROM Purchases'),
-        db.query('SELECT COUNT(*) AS total FROM Sales'),
-        db.query('SELECT COUNT(*) AS total FROM Stock')
+        db.query('SELECT COUNT(*) AS total FROM fruits'),
+        db.query('SELECT COUNT(*) AS total FROM suppliers'),
+        db.query('SELECT COUNT(*) AS total FROM vendors'),
+        db.query('SELECT COUNT(*) AS total FROM purchases'),
+        db.query('SELECT COUNT(*) AS total FROM sales'),
+        db.query('SELECT COUNT(*) AS total FROM stock')
     ]);
 
     return {
