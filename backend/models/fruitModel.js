@@ -4,7 +4,7 @@ const db = require('../config/db');
 // Get all fruits
 const getAllFruits = async () => {
     const [rows] = await db.query(
-        'SELECT * FROM Fruits ORDER BY fruit_id DESC'
+        'SELECT * FROM fruits ORDER BY fruit_id DESC'
     );
     return rows;
 };
@@ -14,7 +14,7 @@ const addFruit = async (fruit) => {
     const { fruit_name, description, status } = fruit;
 
     const [result] = await db.query(
-        'INSERT INTO Fruits (fruit_name, description, status) VALUES (?, ?, ?)',
+        'INSERT INTO fruits (fruit_name, description, status) VALUES (?, ?, ?)',
         [fruit_name, description, status]
     );
 
@@ -26,7 +26,7 @@ const updateFruit = async (id, fruit) => {
     const { fruit_name, description, status } = fruit;
 
     const [result] = await db.query(
-        'UPDATE Fruits SET fruit_name = ?, description = ?, status = ? WHERE fruit_id = ?',
+        'UPDATE fruits SET fruit_name = ?, description = ?, status = ? WHERE fruit_id = ?',
         [fruit_name, description, status, id]
     );
 
@@ -36,7 +36,7 @@ const updateFruit = async (id, fruit) => {
 // Delete a fruit
 const deleteFruit = async (id) => {
     const [result] = await db.query(
-        'DELETE FROM Fruits WHERE fruit_id = ?',
+        'DELETE FROM fruits WHERE fruit_id = ?',
         [id]
     );
 
