@@ -4,7 +4,7 @@ const db = require('../config/db');
 // Get all vendors
 const getAllVendors = async () => {
     const [rows] = await db.query(
-        'SELECT * FROM Vendors ORDER BY vendor_id DESC'
+        'SELECT * FROM vendors ORDER BY vendor_id DESC'
     );
     return rows;
 };
@@ -19,7 +19,7 @@ const addVendor = async (vendor) => {
     } = vendor;
 
     const [result] = await db.query(
-        `INSERT INTO Vendors
+        `INSERT INTO vendors
         (vendor_name, phone_number, location, registration_date)
         VALUES (?, ?, ?, ?)`,
         [vendor_name, phone_number, location, registration_date]
@@ -38,7 +38,7 @@ const updateVendor = async (id, vendor) => {
     } = vendor;
 
     const [result] = await db.query(
-        `UPDATE Vendors
+        `UPDATE vendors
         SET vendor_name = ?, phone_number = ?,
             location = ?, registration_date = ?
         WHERE vendor_id = ?`,
@@ -51,7 +51,7 @@ const updateVendor = async (id, vendor) => {
 // Delete a vendor
 const deleteVendor = async (id) => {
     const [result] = await db.query(
-        'DELETE FROM Vendors WHERE vendor_id = ?',
+        'DELETE FROM vendors WHERE vendor_id = ?',
         [id]
     );
 
