@@ -1,3 +1,4 @@
+
 const db = require('../config/db');
 
 const getAllStock = async () => {
@@ -8,8 +9,8 @@ const getAllStock = async () => {
             f.fruit_name,
             s.packaging_size,
             s.available_quantity
-        FROM Stock s
-        JOIN Fruits f ON s.fruit_id = f.fruit_id
+        FROM stock s
+        JOIN fruits f ON s.fruit_id = f.fruit_id
         ORDER BY f.fruit_name ASC, s.packaging_size ASC
     `);
 
