@@ -1,22 +1,31 @@
 const db = require('../config/db');
 
 const getDashboardStats = async () => {
-    const queries = await Promise.all([
-        db.query('SELECT COUNT(*) AS total FROM fruits'),
-        db.query('SELECT COUNT(*) AS total FROM suppliers'),
-        db.query('SELECT COUNT(*) AS total FROM vendors'),
-        db.query('SELECT COUNT(*) AS total FROM purchases'),
-        db.query('SELECT COUNT(*) AS total FROM sales'),
-        db.query('SELECT COUNT(*) AS total FROM stock')
-    ]);
+    const tables = [
+        'fruits',
+        'suppliers',
+        'vendors',
+        'purchases',
+        'sales',
+        'stock'
+    ];
+
+    const results = await Promise.all(
+        tables.map(async (table) => {
+            const [rows] = await db.query(
+                `SELECT COUNT(*) AS total FROM ${table}`
+            );
+            return rows[0].total;
+        })
+    );
 
     return {
-        totalFruits: queries[0][0][0].total,
-        totalSuppliers: queries[1][0][0].total,
-        totalVendors: queries[2][0][0].total,
-        totalPurchases: queries[3][0][0].total,
-        totalSales: queries[4][0][0].total,
-        totalStockRecords: queries[5][0][0].total
+        totalFruits: results[0],
+        totalSuppliers: results[1],
+        totalVendors: results[2],
+        totalPurchases: results[3],
+        totalSales: results[4],
+        totalStockRecords: results[5]
     };
 };
 
