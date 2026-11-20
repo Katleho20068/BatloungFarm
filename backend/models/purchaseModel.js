@@ -16,10 +16,10 @@ const getAllPurchases = async () => {
             pd.quantity,
             pd.unit_cost,
             pd.packaging_size
-        FROM Purchases p
-        JOIN Suppliers s ON p.supplier_id = s.supplier_id
-        LEFT JOIN Purchase_details pd ON p.purchase_id = pd.purchase_id
-        LEFT JOIN Fruits f ON pd.fruit_id = f.fruit_id
+        FROM purchases p
+        JOIN suppliers s ON p.supplier_id = s.supplier_id
+        LEFT JOIN purchase_details pd ON p.purchase_id = pd.purchase_id
+        LEFT JOIN fruits f ON pd.fruit_id = f.fruit_id
         ORDER BY p.purchase_id DESC
     `);
 
@@ -60,7 +60,7 @@ const addPurchase = async (purchaseData) => {
 
         // Create the purchase record
         const [purchaseResult] = await connection.execute(
-            `INSERT INTO Purchases (supplier_id, purchase_date, total_amount)
+            `INSERT INTO purchases (supplier_id, purchase_date, total_amount)
              VALUES (?, ?, ?)`,
             [supplier_id, purchase_date, totalAmount]
         );
@@ -73,7 +73,7 @@ const addPurchase = async (purchaseData) => {
             const unitCost = Number(item.unit_cost);
 
             await connection.execute(
-                `INSERT INTO Purchase_details
+                `INSERT INTO purchase_details
                  (purchase_id, fruit_id, quantity, unit_cost, packaging_size)
                  VALUES (?, ?, ?, ?, ?)`,
                 [
@@ -87,7 +87,7 @@ const addPurchase = async (purchaseData) => {
 
             // Add quantity to stock, or create the stock record if missing
             await connection.execute(
-                `INSERT INTO Stock
+                `INSERT INTO stock
                  (fruit_id, packaging_size, available_quantity)
                  VALUES (?, ?, ?)
                  ON DUPLICATE KEY UPDATE
