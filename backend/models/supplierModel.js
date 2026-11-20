@@ -1,9 +1,10 @@
+
 const db = require('../config/db');
 
 // Get all suppliers
 const getAllSuppliers = async () => {
     const [rows] = await db.query(
-        'SELECT * FROM Suppliers ORDER BY supplier_id DESC'
+        'SELECT * FROM suppliers ORDER BY supplier_id DESC'
     );
     return rows;
 };
@@ -19,7 +20,7 @@ const addSupplier = async (supplier) => {
     } = supplier;
 
     const [result] = await db.query(
-        `INSERT INTO Suppliers
+        `INSERT INTO suppliers
         (business_name, contact_person, phone, province, address)
         VALUES (?, ?, ?, ?, ?)`,
         [business_name, contact_person, phone, province, address]
@@ -39,7 +40,7 @@ const updateSupplier = async (id, supplier) => {
     } = supplier;
 
     const [result] = await db.query(
-        `UPDATE Suppliers
+        `UPDATE suppliers
         SET business_name = ?, contact_person = ?, phone = ?,
             province = ?, address = ?
         WHERE supplier_id = ?`,
@@ -57,7 +58,7 @@ const deleteSupplier = async (id) => {
         await connection.beginTransaction();
 
         const [supplierRows] = await connection.execute(
-            'SELECT supplier_id FROM Suppliers WHERE supplier_id = ? FOR UPDATE',
+            'SELECT supplier_id FROM suppliers WHERE supplier_id = ? FOR UPDATE',
             [id]
         );
 
@@ -67,26 +68,30 @@ const deleteSupplier = async (id) => {
         }
 
         const [purchaseRows] = await connection.execute(
-            'SELECT purchase_id FROM Purchases WHERE supplier_id = ? FOR UPDATE',
+            'SELECT purchase_id FROM purchases WHERE supplier_id = ? FOR UPDATE',
             [id]
         );
-        const purchaseIds = purchaseRows.map((purchase) => purchase.purchase_id);
+
+        const purchaseIds = purchaseRows.map(
+            (purchase) => purchase.purchase_id
+        );
 
         if (purchaseIds.length > 0) {
             const placeholders = purchaseIds.map(() => '?').join(', ');
 
             await connection.execute(
-                `DELETE FROM Purchase_details WHERE purchase_id IN (${placeholders})`,
+                `DELETE FROM purchase_details WHERE purchase_id IN (${placeholders})`,
                 purchaseIds
             );
+
             await connection.execute(
-                `DELETE FROM Purchases WHERE purchase_id IN (${placeholders})`,
+                `DELETE FROM purchases WHERE purchase_id IN (${placeholders})`,
                 purchaseIds
             );
         }
 
         const [result] = await connection.execute(
-            'DELETE FROM Suppliers WHERE supplier_id = ?',
+            'DELETE FROM suppliers WHERE supplier_id = ?',
             [id]
         );
 
