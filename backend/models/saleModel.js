@@ -1,3 +1,4 @@
+
 const db = require('../config/db');
 
 // Get all sales with vendor and fruit details
@@ -18,10 +19,10 @@ const getAllSales = async () => {
             sd.packaging_size,
             sd.quantity,
             sd.unit_price
-        FROM Sales s
-        JOIN Vendors v ON s.vendor_id = v.vendor_id
-        LEFT JOIN Sales_details sd ON s.sale_id = sd.sale_id
-        LEFT JOIN Fruits f ON sd.fruit_id = f.fruit_id
+        FROM sales s
+        JOIN vendors v ON s.vendor_id = v.vendor_id
+        LEFT JOIN sales_details sd ON s.sale_id = sd.sale_id
+        LEFT JOIN fruits f ON sd.fruit_id = f.fruit_id
         ORDER BY s.sale_id DESC
     `);
 
@@ -93,7 +94,7 @@ const addSale = async (saleData) => {
 
         // Create the sale record
         const [saleResult] = await connection.execute(
-            `INSERT INTO Sales
+            `INSERT INTO sales
              (vendor_id, sale_date, payment_method, payment_status, total_amount, amount_paid)
              VALUES (?, ?, ?, ?, ?, ?)`,
             [
@@ -115,7 +116,7 @@ const addSale = async (saleData) => {
             // Check available stock and lock the stock record
             const [stockRows] = await connection.execute(
                 `SELECT available_quantity
-                 FROM Stock
+                 FROM stock
                  WHERE fruit_id = ?
                  AND packaging_size = ?
                  FOR UPDATE`,
@@ -133,7 +134,7 @@ const addSale = async (saleData) => {
 
             // Save the sale item
             await connection.execute(
-                `INSERT INTO Sales_details
+                `INSERT INTO sales_details
                  (sale_id, fruit_id, packaging_size, quantity, unit_price)
                  VALUES (?, ?, ?, ?, ?)`,
                 [
@@ -147,7 +148,7 @@ const addSale = async (saleData) => {
 
             // Subtract sold quantity from stock
             await connection.execute(
-                `UPDATE Stock
+                `UPDATE stock
                  SET available_quantity = available_quantity - ?
                  WHERE fruit_id = ?
                  AND packaging_size = ?`,
