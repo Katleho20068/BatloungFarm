@@ -20,6 +20,4 @@ const getDashboardStats = async () => {
     };
 };
 
-module.exports = {
-    getDashboardStats
-};
+module.exports = { getDashboardStats };
